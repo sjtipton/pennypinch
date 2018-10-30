@@ -21,17 +21,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "pennypinch.dll"]
-
-
-###
-### TODO for docker compose
-###
-### PS D:\code\MyProjects\github\pennypinch\pennypinch\ClientApp> docker r
-### un --name pennypinch-mongodb -p 27017:27017 -e MONGO_INITDB_ROOT_USERN
-### AME=pennypinchdb -e MONGO_INITDB_ROOT_PASSWORD=bgy2lSlT5r -d mongo:3.2
-### -jessie
-###
-### also get mongo-express and include the user/pass as ME_CONFIG_MONGODB_ADMINUSERNAME
-### and ME_CONFIG_MONGODB_ADMINPASSWORD, respectively (see https://hub.docker.com/_/mongo/)
-### and (https://hub.docker.com/_/mongo-express/)
-###
