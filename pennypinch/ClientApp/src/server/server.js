@@ -11,8 +11,13 @@ const schema = require('./schema/schema')
 // Create a new Express application
 const app = express()
 
-// Replace with your mongoLab URI
-const MONGO_URI = 'mongodb://localhost:27017/pennypinch-mongodb'
+// Figure out how to turn these into configurations or secrets
+const MONGO_USER = 'pennypinchb'
+const MONGO_PASS = 'bgy2lSlT5r'
+const MONGO_SERVER = 'localhost:127017'
+const MONGO_DB = 'pennypinch-mongodb'
+
+const MONGO_URI = `mongodb://${MONGO_USER}:${MONGO_PASS}@${MONGO_SERVER}/${MONGO_DB}`
 
 // Mongoose's built in promise library is deprecated, replace it with ES2015 Promise
 mongoose.Promise = global.Promise
