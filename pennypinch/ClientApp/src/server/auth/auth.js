@@ -18,7 +18,7 @@ passport.use('signup', new localStrategy({
     } catch (error) {
         done(error)
     }
-    }))
+}))
 
 // Create a passport middleware to handle User login
 passport.use('login', new localStrategy({
