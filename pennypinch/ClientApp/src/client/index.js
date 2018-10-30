@@ -10,7 +10,7 @@ import App from './components/App'
 
 const client = new ApolloClient({
   dataIdFromObject: o => o.id,
-  link: createHttpLink({ uri: 'http://localhost:3000' }),
+  link: createHttpLink({ uri: 'http://localhost:3000/graphql' }),
   cache: new InMemoryCache()
 })
 
