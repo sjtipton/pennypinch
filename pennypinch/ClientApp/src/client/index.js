@@ -10,6 +10,7 @@ import App from './components/App'
 import LoginForm from './components/LoginForm'
 import SignupForm from './components/SignupForm'
 import Dashboard from './components/Dashboard'
+import DashboardSetup from './components/DashboardSetup'
 import requireAuth from './components/requireAuth'
 
 const client = new ApolloClient({
@@ -25,6 +26,7 @@ const Root = () => {
         <Route path="/" component={App}>
           <Route path="login" component={LoginForm} />
           <Route path="signup" component={SignupForm} />
+          <Route path="dashboard-setup" component={requireAuth(DashboardSetup)} />
           <Route path="dashboard" component={requireAuth(Dashboard)} />
         </Route>
       </Router>
