@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AuthForm from './AuthForm'
+import NewUserForm from './NewUserForm'
 import mutation from '../mutations/Signup'
 import { graphql } from 'react-apollo'
 import query from '../queries/CurrentUser'
@@ -13,11 +13,9 @@ class SignupForm extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    // this.props // the old, current set of props
-    // nextProps // the next set of props that will be in place when the component rerenders
     if (!this.props.data.user && nextProps.data.user) {
-      // redirect to dashboard
-      hashHistory.push('/dashboard')
+      // redirect to dashboard-setup
+      hashHistory.push('/dashboard-setup')
     }
   }
 
@@ -36,7 +34,7 @@ class SignupForm extends Component {
     return (
       <div>
         <h3>Sign Up</h3>
-        <AuthForm errors={this.state.errors} onSubmit={this.onSubmit.bind(this)} />
+        <NewUserForm errors={this.state.errors} onSubmit={this.onSubmit.bind(this)} />
       </div>
     )
   }

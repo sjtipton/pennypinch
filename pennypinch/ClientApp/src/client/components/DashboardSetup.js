@@ -7,12 +7,17 @@ class DashboardSetup extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    console.log(this.props.data.user, nextProps.data.user)
-    // if the user already has data in all user properties, redirect to dashboard (complete profile)
-    //if (!this.props.data.user && nextProps.data.user) {
-    //  // redirect to dashboard
-    //  hashHistory.push('/dashboard')
-    //}
+    console.log(nextProps.data.user)
+    // if the user already has complete userProfile, redirect to dashboard
+    if (this.hasCompleteProfile(nextProps.data.userProfile)) {
+      // redirect to dashboard
+      hashHistory.push('/dashboard')
+    }
+  }
+
+  hasCompleteProfile({ timezone, weekstart, currency }) {
+    console.log(timezone, weekstart, currency)
+    return !!(timezone && weekstart && currency)
   }
 
   render() {
