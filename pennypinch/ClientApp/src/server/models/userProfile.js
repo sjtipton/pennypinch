@@ -8,3 +8,5 @@ const UserProfileSchema = new Schema({
 })
 
 mongoose.model('userProfile', UserProfileSchema)
+
+module.exports = UserProfileSchema

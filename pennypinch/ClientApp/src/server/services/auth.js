@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const { UserSchema } = require('../models/user')
 
-const User = mongoose.model('user')
+const User = mongoose.model('user', UserSchema)
 
 // SerializeUser is used to provide some identifying token that can be saved
 // in the users session.  We traditionally use the 'ID' for this.
@@ -49,6 +50,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 // for async code!  Awkward!
 function signup({ email, password, firstName, lastName, req }) {
   const user = new User({ email, password, firstName, lastName })
+  console.log('mongo user', user)
   if (!email || !password) { throw new Error('You must provide an email and password.') }
 
   return User.findOne({ email })
