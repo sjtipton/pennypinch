@@ -2,7 +2,8 @@ const graphql = require('graphql')
 const {
   GraphQLObjectType,
   GraphQLString,
-  GraphQLInt
+  GraphQLInt,
+  GraphQLID
 } = graphql
 
 const UserProfileType = new GraphQLObjectType({
@@ -11,7 +12,7 @@ const UserProfileType = new GraphQLObjectType({
     timezone: { type: GraphQLString },
     weekstart: { type: GraphQLInt },
     currency: { type: GraphQLString },
-    userid: { type: GraphQLString }
+    userid: { type: GraphQLID }
   }
 })
 
