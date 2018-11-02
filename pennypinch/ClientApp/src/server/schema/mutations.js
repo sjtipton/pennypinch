@@ -1,13 +1,14 @@
 const graphql = require('graphql')
 const {
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLInt
+  GraphQLString
 } = graphql
+const WeekStartType = require('./types/week_start_type')
 
 const ApiUserType = require('./types/api_user_type')
 const UserProfileType = require('./types/user_profile_type')
 const AuthService = require('../services/auth')
+const ScrimpRestClient = require('../services/restClients/scrimp')
 
 const mutation = new GraphQLObjectType({
   name: 'Mutation',
@@ -28,14 +29,12 @@ const mutation = new GraphQLObjectType({
       type: UserProfileType,
       args: {
         timezone: { type: GraphQLString },
-        weekstart: { type: GraphQLInt },
+        weekstart: { type: WeekStartType },
         currency: { type: GraphQLString },
         userid: { type: GraphQLString }
       },
       resolve: (parentValue, { timezone, weekstart, currency, userid }, req) => {
-        // POST to scrimp API with payload to create user
-        // this will be in a service layer, similar to AuthService, that will find the user to get the existing user details
-        // and send those details with the profile details and userid (GreenlitApiKey) to create the scrimp user
+        return ScrimpRestClient.setupUser({ userid, timezone, weekstart, currency, req })
       }
     },
     logout: {

@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
 import { hashHistory } from 'react-router'
+import UserProfileForm from './UserProfileForm'
+import mutation from '../mutations/SubmitUserProfile'
+import { graphql } from 'react-apollo'
+import query from '../queries/UserProfile'
 
 class DashboardSetup extends Component {
   constructor(props) {
     super(props)
+
+    this.state = { errors: [] }
   }
 
   componentWillUpdate(nextProps) {
-    console.log(nextProps.data.user)
+    console.log('user', nextProps.data.user)
     // if the user already has complete userProfile, redirect to dashboard
-    if (this.hasCompleteProfile(nextProps.data.userProfile)) {
+    if (this.hasCompleteProfile('profile', nextProps.data.userProfile)) {
       // redirect to dashboard
       hashHistory.push('/dashboard')
     }
@@ -20,6 +26,16 @@ class DashboardSetup extends Component {
     return !!(timezone && weekstart && currency)
   }
 
+  onSubmit({ timezone, weekstart, currency }) {
+    this.props.mutate({
+      variables: { timezone, weekstart, currency },
+      refetchQueries: [{ query }]
+    }).catch(res => {
+      const errors = res.graphQLErrors.map(error => error.message)
+      this.setState({ errors })
+    })
+  }
+
   render() {
     return (
       <div>
@@ -27,10 +43,13 @@ class DashboardSetup extends Component {
 
         <h3>Dashboard Setup</h3>
 
-        <div>Complete your user profile. (TODO)</div>
+        <div>Complete your user profile.</div>
+        <UserProfileForm errors={this.state.errors} onSubmit={this.onSubmit.bind(this)} />
       </div>
     )
   }
 }
 
-export default DashboardSetup
+export default graphql(query)(
+  graphql(mutation)(DashboardSetup)
+)

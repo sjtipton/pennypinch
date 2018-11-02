@@ -2,15 +2,15 @@ const graphql = require('graphql')
 const {
   GraphQLObjectType,
   GraphQLString,
-  GraphQLInt,
   GraphQLID
 } = graphql
+const WeekStartType = require('./week_start_type')
 
 const UserProfileType = new GraphQLObjectType({
   name: 'UserProfileType',
   fields: {
     timezone: { type: GraphQLString },
-    weekstart: { type: GraphQLInt },
+    weekstart: { type: WeekStartType },
     currency: { type: GraphQLString },
     userid: { type: GraphQLID }
   }

@@ -62,15 +62,24 @@ function login({ email, password, req }) {
       let authenticatedUser = {
         id: greenlitUser.id,
         email,
-        authToken: greenlitUser.auth_token
+        authToken: greenlitUser.authToken
       }
 
-      return new Promise((resolve, reject) => {
-        req.login(authenticatedUser, (err) => {
-          if (err) { reject(err) }
-          resolve(authenticatedUser)
+      let id = authenticatedUser.id
+
+      return GreenlitApiUser.findOne({ id })
+        .then((apiUser) => {
+          // update the api user's auth token with the fresh authenticated auth token
+          apiUser.authToken = greenlitUser.authToken
+          apiUser.save()
+
+          return new Promise((resolve, reject) => {
+            req.login(authenticatedUser, (err) => {
+              if (err) { reject(err) }
+              resolve(authenticatedUser)
+            })
+          })
         })
-      })
     })
 }
 
