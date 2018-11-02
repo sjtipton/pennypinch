@@ -5,8 +5,7 @@ export default gql`
     signup(email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
       id
       email
-      firstName
-      lastName
+      auth_token
     }
   }
 `

@@ -5,8 +5,7 @@ export default gql`
     user {
       id
       email
-      firstName
-      lastName
+      auth_token
     }
   }
 `
