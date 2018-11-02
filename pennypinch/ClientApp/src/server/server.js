@@ -7,6 +7,7 @@ const passport = require('passport')
 const passportConfig = require('./services/auth')
 const MongoStore = require('connect-mongo')(session)
 const schema = require('./schema/schema')
+const cors = require('cors')
 
 // Create a new Express application
 const app = express()
@@ -43,6 +44,8 @@ app.use(session({
 // assign the current user to the 'req.user' object.  See also servces/auth.js
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.use(cors())
 
 // Instruct Express to pass on any request made to the '/graphql' route
 // to the GraphQL instance.
