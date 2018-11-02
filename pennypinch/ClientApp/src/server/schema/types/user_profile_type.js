@@ -10,7 +10,8 @@ const UserProfileType = new GraphQLObjectType({
   fields: {
     timezone: { type: GraphQLString },
     weekstart: { type: GraphQLInt },
-    currency: { type: GraphQLString }
+    currency: { type: GraphQLString },
+    userid: { type: GraphQLString }
   }
 })
 
