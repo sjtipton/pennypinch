@@ -1,9 +1,10 @@
 const mongoose = require('mongoose')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const { UserSchema } = require('../models/user')
+const { GreenlitUserSchema } = require('../models/greenlitApiUser')
+const GreenlitRestClient = require('./restClients/greenlit')
 
-const User = mongoose.model('user', UserSchema)
+const GreenlitApiUser = mongoose.model('greenlitApiUser', GreenlitUserSchema)
 
 // SerializeUser is used to provide some identifying token that can be saved
 // in the users session.  We traditionally use the 'ID' for this.
@@ -14,7 +15,9 @@ passport.serializeUser((user, done) => {
 // The counterpart of 'serializeUser'.  Given only a user's ID, we must return
 // the user object.  This object is placed on 'req.user'.
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
+  // We can't utilize the `findById` method since the Greenlit API returns a GUID type, which is
+  // out of range of the allowed limitations of the ObjectId conversion
+  GreenlitApiUser.findOne({ id }, (err, user) => {
     done(err, user)
   })
 })
@@ -41,32 +44,39 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
   })
 }))
 
-// Creates a new user account.  We first check to see if a user already exists
-// with this email address to avoid making multiple accounts with identical addresses
-// If it does not, we save the existing user.  After the user is created, it is
-// provided to the 'req.logIn' function.  This is apart of Passport JS.
-// Notice the Promise created in the second 'then' statement.  This is done
-// because Passport only supports callbacks, while GraphQL only supports promises
-// for async code!  Awkward!
+// Calls the Greenlit API to create a User account. A successful created account from Greenlit
+//  will create an ApiUser in GraphQL/MongoDB locally
 function signup({ email, password, firstName, lastName, req }) {
-  const user = new User({ email, password, firstName, lastName })
-  console.log('mongo user', user)
-  if (!email || !password) { throw new Error('You must provide an email and password.') }
+  return GreenlitRestClient.register({ email, password, firstName, lastName, req })
+    .then(() => {
+      // TODO handle errors as collection
+      if (!email || !password) { throw new Error('You must provide an email and password.') }
 
-  return User.findOne({ email })
-    .then(existingUser => {
-      if (existingUser) { throw new Error('Email in use') }
-      return user.save()
-    })
-    .then(user => {
-      return new Promise((resolve, reject) => {
-        req.logIn(user, (err) => {
-          if (err) { reject(err) }
-          resolve(user)
+      return GreenlitApiUser.findOne({ email })
+        .then(existingUser => {
+          if (existingUser) { throw new Error('Email in use') }
+        })
+        .then(() => {
+          return GreenlitRestClient.authenticate({ email, password, req })
+            .then(user => {
+              const apiUser = new GreenlitApiUser({
+                id: user.id,
+                email: user.email,
+                authToken: user.authToken
+              })
+
+              apiUser.save()
+
+              return new Promise((resolve, reject) => {
+                req.login(apiUser, (err) => {
+                  if (err) { reject(err) }
+                  resolve(apiUser)
+                })
+              })
+            })
         })
       })
-    })
-}
+  }
 
 // Logs in a user.  This will invoke the 'local-strategy' defined above in this
 // file. Notice the strange method signature here: the 'passport.authenticate'
