@@ -38,7 +38,7 @@ function signup({ email, password, firstName, lastName, req }) {
             .then(user => {
               const apiUser = new GreenlitApiUser({
                 id: user.id,
-                email: user.emailAddress,
+                email: email,
                 authToken: user.authToken
               })
 
