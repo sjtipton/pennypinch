@@ -24,8 +24,4 @@ function authenticate({ email, password }) {
   })
 }
 
-function user({ id, req }) {
-  // retrieve user by given id in Greenlit API
-}
-
-module.exports = { register, authenticate, user }
+module.exports = { register, authenticate }
