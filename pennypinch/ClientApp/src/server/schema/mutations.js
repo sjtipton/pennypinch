@@ -8,6 +8,7 @@ const WeekStartType = require('./types/week_start_type')
 const ApiUserType = require('./types/api_user_type')
 const UserProfileType = require('./types/user_profile_type')
 const AuthService = require('../services/auth')
+const GreenlitRestClient = require('../services/restClients/greenlit')
 const ScrimpRestClient = require('../services/restClients/scrimp')
 
 const mutation = new GraphQLObjectType({
@@ -33,8 +34,12 @@ const mutation = new GraphQLObjectType({
         currency: { type: GraphQLString },
         userid: { type: GraphQLString }
       },
-      resolve: (parentValue, { timezone, weekstart, currency, userid }, req) => {
-        return ScrimpRestClient.setupUser({ userid, timezone, weekstart, currency, req })
+      resolve: (parentValue, { timezone, weekstart, currency }, req) => {
+        const userid = req.user.id
+        return GreenlitRestClient.find(userid, req)
+          .then((greenlitUser) => {
+            return ScrimpRestClient.setupUser({ greenlitUser, timezone, weekstart, currency, req })
+          })
       }
     },
     logout: {

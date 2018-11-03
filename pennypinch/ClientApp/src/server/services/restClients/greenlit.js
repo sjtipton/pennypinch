@@ -24,4 +24,22 @@ function authenticate({ email, password }) {
   })
 }
 
-module.exports = { register, authenticate }
+function find(id, req) {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: 'get',
+      url: `${baseURL}/users/${id}`,
+      headers: getAuthorizationHeader(req)
+    }).then(response => {
+      resolve(response.data)
+    }).catch(ex => {
+      reject(ex)
+    })
+  })
+}
+
+function getAuthorizationHeader(req) {
+  return { 'Authorization': `Bearer ${req.user.authToken}` }
+}
+
+module.exports = { register, authenticate, find }

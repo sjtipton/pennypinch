@@ -1,44 +1,43 @@
 const axios = require('axios')
+const mongoose = require('mongoose')
+const { UserProfileSchema } = require('../../models/userProfile')
+const UserProfile = mongoose.model('userProfile', UserProfileSchema)
 
 // TODO get url from config
 const baseURL = 'http://localhost:4000/api'
 
-function setupUser({ userid, timezone, weekstart, currency, req}) {
-  return find({ userid, req })
-    .then(user => {
-      const data = {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        emailAddress: user.emailAddress,
-        greenlitApiId: userid,
-        timezone,
-        weekStartDay: weekstart,
-        currencyCode: currency,
-        authToken: req.user.authToken
-      }
+function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
+  const payload = {
+    firstName: greenlitUser.firstName,
+    lastName: greenlitUser.lastName,
+    emailAddress: greenlitUser.emailAddress,
+    authToken: req.user.authToken,
+    greenlitApiId: greenlitUser.id,
+    weekStartDay: weekstart,
+    currencyCode: currency,
+    timezone
+  }
 
-      return setup(data, req)
-        .then((result) => {
-          console.log('result of setup', result)
+  return setup(payload, req)
+    .then((response) => {
+      const { authToken } = payload
+      return UserProfile.findOne({ authToken })
+        .then(existingProfile => {
+          if (existingProfile) { throw new Error('User profile has already been setup') }
         })
-        .catch((err) => {
-          console.log('failed', err)
-        })
-    })
-}
+        .then(() => {
+          const userProfile = new UserProfile({
+            timezone: payload.timezone,
+            weekstart: payload.weekStartDay,
+            currency: payload.currencyCode,
+            userid: req.user.id
+          })
 
-function find({ id, req }) {
-  return new Promise((resolve, reject) => {
-    axios({
-      method: 'get',
-      url: `${baseURL}/users/${id}`,
-      headers: getAuthorizeHeader(req)
-    }).then(response => {
-      resolve(response.data)
-    }).catch(ex => {
-      reject(ex)
+          userProfile.save()
+        })
+    }).catch((err) => {
+      reject(err)
     })
-  })
 }
 
 function setup(payload, req) {
@@ -53,8 +52,7 @@ function setup(payload, req) {
 }
 
 function getAuthorizeHeader(req) {
-  console.log('token', req.user.authToken)
   return { 'Authorization': `Bearer ${req.user.authToken}` }
 }
 
-module.exports = { find, setupUser }
+module.exports = { setupUser }

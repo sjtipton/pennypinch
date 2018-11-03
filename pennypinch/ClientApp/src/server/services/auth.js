@@ -69,6 +69,8 @@ function login({ email, password, req }) {
 
       return GreenlitApiUser.findOne({ id })
         .then((apiUser) => {
+          if (!apiUser) { throw new Error('User does not exist. Please sign up.') }
+
           // update the api user's auth token with the fresh authenticated auth token
           apiUser.authToken = greenlitUser.authToken
           apiUser.save()

@@ -13,7 +13,6 @@ class DashboardSetup extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    console.log('user', nextProps.data.user)
     // if the user already has complete userProfile, redirect to dashboard
     if (this.hasCompleteProfile('profile', nextProps.data.userProfile)) {
       // redirect to dashboard
@@ -22,7 +21,6 @@ class DashboardSetup extends Component {
   }
 
   hasCompleteProfile({ timezone, weekstart, currency }) {
-    console.log(timezone, weekstart, currency)
     return !!(timezone && weekstart && currency)
   }
 
