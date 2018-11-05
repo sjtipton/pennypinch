@@ -3,7 +3,7 @@ import { hashHistory } from 'react-router'
 import UserProfileForm from './UserProfileForm'
 import mutation from '../mutations/SubmitUserProfile'
 import { graphql } from 'react-apollo'
-import query from '../queries/UserProfile'
+import query from '../queries/CurrentUser'
 
 class DashboardSetup extends Component {
   constructor(props) {
@@ -14,13 +14,15 @@ class DashboardSetup extends Component {
 
   componentWillUpdate(nextProps) {
     // if the user already has complete userProfile, redirect to dashboard
-    if (this.hasCompleteProfile('profile', nextProps.data.userProfile)) {
+    if (this.hasCompleteProfile(nextProps.data.user.profile)) {
       // redirect to dashboard
       hashHistory.push('/dashboard')
     }
   }
 
-  hasCompleteProfile({ timezone, weekstart, currency }) {
+  hasCompleteProfile(profile) {
+    if (!profile) return false
+    const { timezone, weekstart, currency } = profile
     return !!(timezone && weekstart && currency)
   }
 
