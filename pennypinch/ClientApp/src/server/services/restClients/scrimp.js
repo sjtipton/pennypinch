@@ -33,6 +33,10 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
             userid: req.user.id
           })
 
+          // TODO peek response... should have a User and a Jwt
+          //  these should become an instance of a new ApiUserType as a ScrimpApiUser
+          //  with its own AuthToken
+
           userProfile.save()
         })
     }).catch((err) => {
