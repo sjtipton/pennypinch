@@ -1,6 +1,9 @@
 const graphql = require('graphql')
 const mongoose = require('mongoose')
-const { GraphQLObjectType } = graphql
+const {
+  GraphQLObjectType,
+  GraphQLID
+} = graphql
 const ApiUserType = require('./api_user_type')
 const UserProfileType = require('./user_profile_type')
 const { UserProfileSchema } = require('../../models/userProfile')
@@ -11,6 +14,7 @@ const RootQueryType = new GraphQLObjectType({
   fields: {
     user: {
       type: ApiUserType,
+      args: { id: { type: GraphQLID } },
       resolve: (parentValue, args, req) => {
         return req.user
       }
