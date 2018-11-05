@@ -5,7 +5,12 @@ export default gql`
     user {
       id
       email
-      auth_token
+      authToken
+      profile {
+        timezone
+        weekstart
+        currency
+      }
     }
   }
 `
