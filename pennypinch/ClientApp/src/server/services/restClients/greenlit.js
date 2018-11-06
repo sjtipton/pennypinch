@@ -1,7 +1,7 @@
 const axios = require('axios')
 const mongoose = require('mongoose')
-const { GreenlitAuthTokenSchema } = require('../../models/greenlitAuthToken')
-const GreenlitAuthToken = mongoose.model('greenlitAuthToken', GreenlitAuthTokenSchema)
+const { AuthTokenSchema } = require('../../models/authToken')
+const AuthToken = mongoose.model('authToken', AuthTokenSchema)
 
 const baseURL = 'http://localhost:8000'
 
@@ -28,29 +28,43 @@ function authenticate({ email, password }) {
 }
 
 function find(id, req) {
-  return new Promise((resolve, reject) => {
-    axios({
-      method: 'get',
-      url: `${baseURL}/users/${id}`,
-      headers: getAuthorizationHeader(req)
-    }).then(response => {
-      resolve(response.data)
-    }).catch(ex => {
-      reject(ex)
+  return getAuthorizationHeader(id)
+    .then((authHeaders) => {
+      return new Promise((resolve, reject) => {
+        axios({
+          method: 'get',
+          url: `${baseURL}/users/${id}`,
+          headers: authHeaders
+        }).then(response => {
+          resolve(response.data)
+        }).catch(ex => {
+          reject(ex)
+        })
+      })
     })
+}
+
+function getAuthToken(apiId) {
+  return new Promise((resolve, reject) => {
+    return AuthToken.findOne({ apiId })
+      .then((found) => {
+        resolve(found.authToken)
+      }).catch(ex => {
+        reject(ex)
+      })
   })
 }
 
-function getAuthorizationHeader(req) {
-  const { id } = req.user
-
-  return GreenlitAuthToken.findOne({ id })
-    .then((found) => {
-      console.log(found.authToken)
-      return { 'Authorization': `Bearer ${found.authToken}` }
-    }).catch(ex => {
-      throw new Error(ex)
-    })
+function getAuthorizationHeader(apiId) {
+  return new Promise((resolve, reject) => {
+    return getAuthToken(apiId)
+      .then((authToken) => {
+        const header = { 'Authorization': `Bearer ${authToken}` }
+        resolve(header)
+      }).catch(ex => {
+        reject(ex)
+      })
+  })
 }
 
-module.exports = { register, authenticate, find }
+module.exports = { register, authenticate, find, getAuthToken }

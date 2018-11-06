@@ -5,24 +5,18 @@ export default gql`
     user {
       id
       email
+      authTokens {
+        apiId
+        authToken
+        expiresIn
+        issuedAt
+      }
       profile {
         timezone
         weekstart
         currency
-        greenlitApiId
+        userid
         scrimpApiId
-        greenlitAuthToken {
-          id
-          authToken
-          expiresIn
-          issuedAt
-        }
-        scrimpAuthToken {
-          id
-          authToken
-          expiresIn
-          issuedAt
-        }
       }
     }
   }

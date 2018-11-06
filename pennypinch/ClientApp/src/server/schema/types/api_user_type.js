@@ -3,25 +3,33 @@ const mongoose = require('mongoose')
 const {
   GraphQLObjectType,
   GraphQLString,
-  GraphQLID
+  GraphQLID,
+  GraphQLList
 } = graphql
+const AuthTokenType = require('./auth_token_type')
 const UserProfileType = require('./user_profile_type')
 const { UserProfileSchema } = require('../../models/userProfile')
 const UserProfile = mongoose.model('userProfile', UserProfileSchema)
+const { AuthTokenSchema } = require('../../models/authToken')
+const AuthToken = mongoose.model('authToken', AuthTokenSchema)
 
 const ApiUserType = new GraphQLObjectType({
   name: 'ApiUserType',
   fields: {
     id: { type: GraphQLID },
     email: { type: GraphQLString },
+    authTokens: {
+      type: new GraphQLList(AuthTokenType),
+      resolve: (parentValue, args, req) => {
+        // retrieve all AuthTokens (e.g. Greenlit and Scrimp)
+        return AuthToken.find({})
+      }
+    },
     profile: {
       type: UserProfileType,
       resolve: (parentValue, args, req) => {
+        // locate the UserProfile by the userid
         const userid = parentValue.id
-        console.log('parent', parentValue)
-        console.log('userid', userid)
-        // TODO we will know the greenlitApiId at this point, but we won't know the scrimpApiId
-        //  so maybe we need to attach it to the ApiUserType, and have the profile pull it off the parent?
         return UserProfile.findOne({ userid })
       }
     }

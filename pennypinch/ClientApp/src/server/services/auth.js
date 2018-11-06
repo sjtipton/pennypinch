@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 const passport = require('passport')
 const { GreenlitUserSchema } = require('../models/greenlitApiUser')
-const GreenlitRestClient = require('./restClients/greenlit')
-const { GreenlitAuthTokenSchema } = require('../models/greenlitAuthToken')
-const GreenlitAuthToken = mongoose.model('greenlitAuthToken', GreenlitAuthTokenSchema)
 const GreenlitApiUser = mongoose.model('greenlitApiUser', GreenlitUserSchema)
+const { AuthTokenSchema } = require('../models/authToken')
+const AuthToken = mongoose.model('authToken', AuthTokenSchema)
+const GreenlitRestClient = require('./restClients/greenlit')
 
 // SerializeUser is used to provide some identifying token that can be saved
 // in the users session.  We traditionally use the 'ID' for this.
@@ -42,12 +42,9 @@ function signup({ email, password, firstName, lastName, req }) {
                 email: email
               })
 
-              const greenlitAuthToken = new GreenlitAuthToken({
-                id: authResponse.id,
-                authToken: authResponse.authToken,
-                expiresIn: authResponse.expiresIn,
-                issuedAt: authResponse.issuedAt
-              })
+              const { id, authToken, expiresIn, issuedAt } = authResponse
+
+              const greenlitAuthToken = new AuthToken({ apiId: id, authToken, expiresIn, issuedAt })
 
               apiUser.save()
               greenlitAuthToken.save()
@@ -74,7 +71,7 @@ function login({ email, password, req }) {
 
       let id = authenticatedUser.id
 
-      return GreenlitAuthToken.findOne({ id })
+      return AuthToken.findOne({ apiId: id })
         .then((userToken) => {
           if (!userToken) { throw new Error('User is unauthorized. Please sign up.') }
 

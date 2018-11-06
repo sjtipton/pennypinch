@@ -5,7 +5,7 @@ const UserProfileSchema = new Schema({
   timezone: String,
   weekstart: Number,
   currency: String,
-  greenlitApiId: String,
+  userid: String,
   scrimpApiId: Number
 })
 

@@ -8,7 +8,7 @@ const {
 const AuthTokenType = new GraphQLObjectType({
   name: 'AuthTokenType',
   fields: {
-    id: { type: GraphQLID },
+    apiId: { type: GraphQLID },
     authToken: { type: GraphQLString },
     expiresIn: { type: GraphQLString },
     issuedAt: { type: GraphQLString }
