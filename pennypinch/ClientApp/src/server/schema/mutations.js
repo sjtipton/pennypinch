@@ -1,7 +1,8 @@
 const graphql = require('graphql')
 const {
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
+  GraphQLID
 } = graphql
 const WeekStartType = require('./types/week_start_type')
 
@@ -32,7 +33,8 @@ const mutation = new GraphQLObjectType({
         timezone: { type: GraphQLString },
         weekstart: { type: WeekStartType },
         currency: { type: GraphQLString },
-        userid: { type: GraphQLString }
+        greenlitApiId: { type: GraphQLID },
+        scrimpApiId: { type: GraphQLID }
       },
       resolve: (parentValue, { timezone, weekstart, currency }, req) => {
         const userid = req.user.id

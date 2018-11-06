@@ -5,12 +5,14 @@ export default gql`
     signup(email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
       id
       email
-      greenlitAuthToken {
-        id
-        name
-        authToken
-        expiresIn
-        issuedAt
+      profile {
+        greenlitApiId
+        greenlitAuthToken {
+          id
+          authToken
+          expiresIn
+          issuedAt
+        }
       }
     }
   }

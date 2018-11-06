@@ -44,7 +44,6 @@ function signup({ email, password, firstName, lastName, req }) {
 
               const greenlitAuthToken = new GreenlitAuthToken({
                 id: authResponse.id,
-                name: "GREENLIT",
                 authToken: authResponse.authToken,
                 expiresIn: authResponse.expiresIn,
                 issuedAt: authResponse.issuedAt

@@ -9,20 +9,20 @@ export default gql`
         timezone
         weekstart
         currency
-      }
-      greenlitAuthToken {
-        id
-        name
-        authToken
-        expiresIn
-        issuedAt
-      },
-      scrimpAuthToken {
-        id
-        name
-        authToken
-        expiresIn
-        issuedAt
+        greenlitApiId
+        scrimpApiId
+        greenlitAuthToken {
+          id
+          authToken
+          expiresIn
+          issuedAt
+        }
+        scrimpAuthToken {
+          id
+          authToken
+          expiresIn
+          issuedAt
+        }
       }
     }
   }

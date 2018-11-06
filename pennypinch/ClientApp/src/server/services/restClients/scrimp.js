@@ -26,8 +26,8 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
 
   return setup(payload, req)
     .then((response) => {
-      const { userid } = payload.greenlitApiId
-      return UserProfile.findOne({ userid })
+      const { greenlitApiId } = payload.greenlitApiId
+      return UserProfile.findOne({ greenlitApiId })
         .then(existingProfile => {
           if (existingProfile) { throw new Error('User profile has already been setup') }
         })
@@ -65,7 +65,7 @@ function setup(payload, req) {
 }
 
 function getGreenlitAuthToken(id) {
-  return GreenlitAuthToken.findOne(id)
+  return GreenlitAuthToken.findOne({ id })
     .then((found) => {
       console.log(found.authToken)
       return found.authToken
