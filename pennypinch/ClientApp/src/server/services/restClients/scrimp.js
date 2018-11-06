@@ -67,9 +67,31 @@ function setup(payload, req) {
   })
 }
 
-function getAuthorizeHeader() {
-  const id = '42' // TODO figure out how to pull scrimp auth token id from mongo user profile
-  return { 'Authorization': `Bearer ${AuthToken.findOne({ id })}` }
+function getAuthToken(apiId) {
+  return new Promise((resolve, reject) => {
+    return AuthToken.findOne({ apiId })
+      .then((found) => {
+        resolve(found.authToken)
+      }).catch(ex => {
+        reject(ex)
+      })
+  })
 }
 
-module.exports = { setupUser }
+// this service will have functions that will call Scrimp API endpoints dependent on a Scrimp JWT authToken
+// those functions will need to receive an apiId as an argument... they'd be called from mutations.js
+// in this scope, it should be off the level of the UserProfileType, and may be available in parentValue,
+// or should be injected in args
+function getAuthorizationHeader(apiId) {
+  return new Promise((resolve, reject) => {
+    return getAuthToken(apiId)
+      .then((authToken) => {
+        const header = { 'Authorization': `Bearer ${authToken}` }
+        resolve(header)
+      }).catch(ex => {
+        reject(ex)
+      })
+  })
+}
+
+module.exports = { setupUser, getAuthToken }
