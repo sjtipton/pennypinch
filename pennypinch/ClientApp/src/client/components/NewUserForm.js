@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 
-class AuthForm extends Component {
+class NewUserForm extends Component {
   constructor(props) {
     super(props)
 
-    this.state = { email: '', password: '' }
+    this.state = {
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: ''
+    }
   }
 
   onSubmit(event) {
@@ -17,6 +22,20 @@ class AuthForm extends Component {
     return (
       <div className="row">
         <form onSubmit={this.onSubmit.bind(this)} className="col s6">
+          <div className="input-field">
+            <input
+                placeholder="First Name"
+                value={this.state.firstName}
+                onChange={e => this.setState({ firstName: e.target.value })}
+            />
+          </div>
+          <div className="input-field">
+            <input
+                placeholder="Last Name"
+                value={this.state.lastName}
+                onChange={e => this.setState({ lastName: e.target.value })}
+            />
+          </div>
           <div className="input-field">
             <input
                 placeholder="Email"
@@ -44,4 +63,4 @@ class AuthForm extends Component {
   }
 }
 
-export default AuthForm
+export default NewUserForm

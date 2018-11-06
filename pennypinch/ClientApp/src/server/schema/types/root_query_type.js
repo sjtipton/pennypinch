@@ -1,12 +1,20 @@
 const graphql = require('graphql')
-const { GraphQLObjectType, GraphQLID } = graphql
-const UserType = require('./user_type')
+const {
+  GraphQLObjectType,
+  GraphQLID,
+  GraphQLString
+} = graphql
+const ApiUserType = require('./api_user_type')
 
 const RootQueryType = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
     user: {
-      type: UserType,
+      type: ApiUserType,
+      args: {
+        id: { type: GraphQLID },
+        email: { type: GraphQLString }
+      },
       resolve: (parentValue, args, req) => {
         return req.user
       }

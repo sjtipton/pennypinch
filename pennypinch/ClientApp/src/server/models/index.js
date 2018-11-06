@@ -1,1 +1,3 @@
-﻿require('./user')
+require('./greenlitApiUser')
+require('./userProfile')
+require('./authToken')
