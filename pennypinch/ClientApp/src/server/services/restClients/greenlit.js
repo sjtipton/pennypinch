@@ -1,4 +1,7 @@
 const axios = require('axios')
+const mongoose = require('mongoose')
+const { GreenlitAuthTokenSchema } = require('../../models/greenlitAuthToken')
+const GreenlitAuthToken = mongoose.model('greenlitAuthToken', GreenlitAuthTokenSchema)
 
 const baseURL = 'http://localhost:8000'
 
@@ -39,7 +42,15 @@ function find(id, req) {
 }
 
 function getAuthorizationHeader(req) {
-  return { 'Authorization': `Bearer ${req.user.authToken}` }
+  const { id } = req.user
+
+  return GreenlitAuthToken.findOne({ id })
+    .then((found) => {
+      console.log(found.authToken)
+      return { 'Authorization': `Bearer ${found.authToken}` }
+    }).catch(ex => {
+      throw new Error(ex)
+    })
 }
 
 module.exports = { register, authenticate, find }

@@ -12,7 +12,8 @@ const UserProfileType = new GraphQLObjectType({
     timezone: { type: GraphQLString },
     weekstart: { type: WeekStartType },
     currency: { type: GraphQLString },
-    userid: { type: GraphQLID }
+    greenlitApiId: { type: GraphQLID },
+    scrimpApiId: { type: GraphQLID }
   }
 })
 

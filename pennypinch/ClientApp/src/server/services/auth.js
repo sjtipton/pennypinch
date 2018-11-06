@@ -2,7 +2,8 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const { GreenlitUserSchema } = require('../models/greenlitApiUser')
 const GreenlitRestClient = require('./restClients/greenlit')
-
+const { GreenlitAuthTokenSchema } = require('../models/greenlitAuthToken')
+const GreenlitAuthToken = mongoose.model('greenlitAuthToken', GreenlitAuthTokenSchema)
 const GreenlitApiUser = mongoose.model('greenlitApiUser', GreenlitUserSchema)
 
 // SerializeUser is used to provide some identifying token that can be saved
@@ -35,14 +36,22 @@ function signup({ email, password, firstName, lastName, req }) {
         })
         .then(() => {
           return GreenlitRestClient.authenticate({ email, password, req })
-            .then(user => {
+            .then(authResponse => {
               const apiUser = new GreenlitApiUser({
-                id: user.id,
-                email: email,
-                authToken: user.authToken
+                id: authResponse.id,
+                email: email
+              })
+
+              const greenlitAuthToken = new GreenlitAuthToken({
+                id: authResponse.id,
+                name: "GREENLIT",
+                authToken: authResponse.authToken,
+                expiresIn: authResponse.expiresIn,
+                issuedAt: authResponse.issuedAt
               })
 
               apiUser.save()
+              greenlitAuthToken.save()
 
               return new Promise((resolve, reject) => {
                 req.login(apiUser, (err) => {
@@ -61,19 +70,20 @@ function login({ email, password, req }) {
     .then((greenlitUser) => {
       let authenticatedUser = {
         id: greenlitUser.id,
-        email,
-        authToken: greenlitUser.authToken
+        email
       }
 
       let id = authenticatedUser.id
 
-      return GreenlitApiUser.findOne({ id })
-        .then((apiUser) => {
-          if (!apiUser) { throw new Error('User does not exist. Please sign up.') }
+      return GreenlitAuthToken.findOne({ id })
+        .then((userToken) => {
+          if (!userToken) { throw new Error('User is unauthorized. Please sign up.') }
 
           // update the api user's auth token with the fresh authenticated auth token
-          apiUser.authToken = greenlitUser.authToken
-          apiUser.save()
+          userToken.authToken = greenlitUser.authToken
+          userToken.expiresIn = greenlitUser.expiresIn
+          userToken.issuedAt = greenlitUser.issuedAt
+          userToken.save()
 
           return new Promise((resolve, reject) => {
             req.login(authenticatedUser, (err) => {

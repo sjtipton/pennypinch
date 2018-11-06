@@ -2,16 +2,22 @@ const axios = require('axios')
 const mongoose = require('mongoose')
 const { UserProfileSchema } = require('../../models/userProfile')
 const UserProfile = mongoose.model('userProfile', UserProfileSchema)
+const { GreenlitAuthTokenSchema } = require('../../models/greenlitAuthToken')
+const { ScrimpAuthTokenSchema } = require('../../models/scrimpAuthToken')
+const GreenlitAuthToken = mongoose.model('greenlitAuthToken', GreenlitAuthTokenSchema)
+const ScrimpAuthToken = mongoose.model('scrimpAuthToken', ScrimpAuthTokenSchema)
 
 // TODO get url from config
 const baseURL = 'http://localhost:4000/api'
 
 function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
+  const greenlitAuthTokenId = req.user.id
+
   const payload = {
     firstName: greenlitUser.firstName,
     lastName: greenlitUser.lastName,
     emailAddress: greenlitUser.emailAddress,
-    authToken: req.user.authToken,
+    authToken: getGreenlitAuthToken(greenlitAuthTokenId),
     greenlitApiId: greenlitUser.id,
     weekStartDay: weekstart,
     currencyCode: currency,
@@ -20,24 +26,27 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
 
   return setup(payload, req)
     .then((response) => {
-      const { authToken } = payload
-      return UserProfile.findOne({ authToken })
+      const { userid } = payload.greenlitApiId
+      return UserProfile.findOne({ userid })
         .then(existingProfile => {
           if (existingProfile) { throw new Error('User profile has already been setup') }
         })
         .then(() => {
+          // construct a 
           const userProfile = new UserProfile({
             timezone: payload.timezone,
             weekstart: payload.weekStartDay,
             currency: payload.currencyCode,
-            userid: req.user.id
+            greenlitApiId: req.user.id,
+            scrimpApiId: response.user.id
           })
 
-          // TODO peek response... should have a User and a Jwt
-          //  these should become an instance of a new ApiUserType as a ScrimpApiUser
-          //  with its own AuthToken
+          const { id, authToken, expiresIn, issuedAt } = response.jwt
+
+          const scrimpAuthToken = new ScrimpAuthToken({ id, authToken, expiresIn, issuedAt })
 
           userProfile.save()
+          scrimpAuthToken.save()
         })
     }).catch((err) => {
       reject(err)
@@ -55,8 +64,29 @@ function setup(payload, req) {
   })
 }
 
-function getAuthorizeHeader(req) {
-  return { 'Authorization': `Bearer ${req.user.authToken}` }
+function getGreenlitAuthToken(id) {
+  return GreenlitAuthToken.findOne(id)
+    .then((found) => {
+      console.log(found.authToken)
+      return found.authToken
+    }).catch(ex => {
+      throw new Error(ex)
+    })
+}
+
+function getScrimpAuthToken(id) {
+  return ScrimpAuthToken.findOne(id)
+    .then((found) => {
+      console.log(found.authToken)
+      return found.authToken
+    }).catch(ex => {
+      throw new Error(ex)
+    })
+}
+
+function getAuthorizeHeader() {
+  // TODO figure out how to pull scrimp auth token id from mongo user profile
+  return { 'Authorization': `Bearer ${getScrimpAuthToken()}` }
 }
 
 module.exports = { setupUser }

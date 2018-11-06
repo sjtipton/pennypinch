@@ -5,7 +5,8 @@ const UserProfileSchema = new Schema({
   timezone: String,
   weekstart: Number,
   currency: String,
-  userid: String
+  greenlitApiId: String,
+  scrimpApiId: Number
 })
 
 mongoose.model('userProfile', UserProfileSchema)

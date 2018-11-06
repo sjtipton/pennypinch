@@ -3,8 +3,7 @@ const Schema = mongoose.Schema
 
 const GreenlitUserSchema = new Schema({
   id: String,
-  email: String,
-  authToken: String
+  email: String
 })
 
 mongoose.model('greenlitApiUser', GreenlitUserSchema)
