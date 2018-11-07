@@ -21,7 +21,7 @@ const ApiUserType = new GraphQLObjectType({
     authTokens: {
       type: new GraphQLList(AuthTokenType),
       resolve: (parentValue, args, req) => {
-        // retrieve all AuthTokens (e.g. Greenlit and Scrimp)
+        // retrieve all AuthTokens (e.g. Greenlit and Scrimp) for the current user
         return AuthToken.find({})
       }
     },

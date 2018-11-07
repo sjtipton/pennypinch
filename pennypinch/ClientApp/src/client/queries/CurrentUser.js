@@ -6,6 +6,7 @@ export default gql`
       id
       email
       authTokens {
+        userId
         apiId
         authToken
         expiresIn

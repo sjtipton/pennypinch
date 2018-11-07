@@ -37,13 +37,13 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
                 timezone: payload.timezone,
                 weekstart: payload.weekStartDay,
                 currency: payload.currencyCode,
-                userid: payload.greenlitApiId,
+                userid: userid,
                 scrimpApiId: response.user.id
               })
 
               const { id, authToken, expiresIn, issuedAt } = response.jwt
 
-              const scrimpAuthToken = new AuthToken({ apiId: id, authToken, expiresIn, issuedAt })
+              const scrimpAuthToken = new AuthToken({ userId: userid, apiId: id, authToken, expiresIn, issuedAt })
 
               userProfile.save()
               scrimpAuthToken.save()

@@ -44,7 +44,7 @@ function signup({ email, password, firstName, lastName, req }) {
 
               const { id, authToken, expiresIn, issuedAt } = authResponse
 
-              const greenlitAuthToken = new AuthToken({ apiId: id, authToken, expiresIn, issuedAt })
+              const greenlitAuthToken = new AuthToken({ userId: id, apiId: id, authToken, expiresIn, issuedAt })
 
               apiUser.save()
               greenlitAuthToken.save()
