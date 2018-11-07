@@ -101,6 +101,7 @@ class UserProfileForm extends Component {
         <TextField
             id="zipcode-lookup"
             label="Zip Code"
+            placeholder="Zip Code"
             className={classes.textField}
             value={this.state.zipcode}
             onChange={e => this.setState({ zipcode: e.target.value })}
@@ -114,6 +115,7 @@ class UserProfileForm extends Component {
             disabled
             id="timezone"
             label="Timezone"
+            placeholder="Timezone"
             className={classes.textField}
             value={this.state.timezone}
             helperText="Will be based on your location"
@@ -126,6 +128,7 @@ class UserProfileForm extends Component {
             id="select-weekstart"
             select
             label="Starting Day of Week"
+            placeholder="Starting Day of Week"
             className={classes.textField}
             value={this.state.weekstart}
             onChange={e => this.setState({ weekstart: e.target.value })}
@@ -146,6 +149,7 @@ class UserProfileForm extends Component {
             id="select-currency"
             select
             label="Currency Preference"
+            placeholder="Currency Preference"
             className={classes.textField}
             value={this.state.currency}
             onChange={e => this.setState({ currency: e.target.value })}
@@ -173,7 +177,7 @@ class UserProfileForm extends Component {
         <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSave.bind(this)}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
           Save
-      </Button>
+        </Button>
       </form>
     )
   }
