@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
@@ -66,7 +66,7 @@ const days = [
   'SATURDAY'
 ]
 
-class UserProfileForm extends React.Component {
+class UserProfileForm extends Component {
   constructor(props) {
     super(props)
 
@@ -89,9 +89,7 @@ class UserProfileForm extends React.Component {
     this.setState({ timezone: tz })
   }
 
-  onSubmit(event) {
-    event.preventDefault()
-
+  handleSave(event) {
     this.props.onSubmit(this.state)
   }
 
@@ -99,7 +97,7 @@ class UserProfileForm extends React.Component {
     const { classes } = this.props
 
     return (
-      <form className={classes.container} noValidate autoComplete="off" onSubmit={this.onSubmit.bind(this)}>
+      <form className={classes.container} noValidate autoComplete="off">
         <TextField
             id="zipcode-lookup"
             label="Zip Code"
@@ -172,7 +170,7 @@ class UserProfileForm extends React.Component {
           {this.props.errors.map(error => <div key={error}>{error}</div>)}
         </div>
 
-        <Button variant="contained" color="primary" className={classes.button}>
+        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSave.bind(this)}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
           Save
       </Button>
