@@ -114,7 +114,7 @@ class NewUserForm extends Component {
 
         <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSave.bind(this)}>
           <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-          Save
+          Sign Up
         </Button>
       </form>
     )
