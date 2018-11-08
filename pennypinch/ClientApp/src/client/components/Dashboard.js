@@ -6,8 +6,6 @@ class Dashboard extends Component {
   constructor(props) {
     super(props)
 
-    console.log('user at constructor level', this.props.data.user)
-
     this.state = { errors: [] }
   }
 
