@@ -30,8 +30,8 @@ const ApiUserType = new GraphQLObjectType({
       type: UserProfileType,
       resolve: (parentValue, args, req) => {
         // locate the UserProfile by the userid
-        const userid = parentValue.id
-        return UserProfile.findOne({ userid })
+        const { id } = parentValue
+        return UserProfile.findOne({ greenlitApiId: id })
       }
     }
   }

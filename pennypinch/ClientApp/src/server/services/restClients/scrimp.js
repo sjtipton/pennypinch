@@ -27,8 +27,8 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
 
       return setup(payload, req)
         .then((response) => {
-          const userid = payload.greenlitApiId
-          return UserProfile.findOne({ userid })
+          const userid = req.user.id
+          return UserProfile.findOne({ greenlitApiId: userid })
             .then(existingProfile => {
               if (existingProfile) { throw new Error('User profile has already been setup') }
             })
@@ -37,7 +37,7 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
                 timezone: payload.timezone,
                 weekstart: payload.weekStartDay,
                 currency: payload.currencyCode,
-                userid: userid,
+                greenlitApiId: userid,
                 scrimpApiId: response.user.id
               })
 
