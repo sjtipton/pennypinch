@@ -26,18 +26,6 @@ const styles = {
 }
 
 class Header extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = { brandMessage: 'Pennypinch' }
-  }
-
-  componentWillUpdate(nextProps) {
-    if (this.props.data.user && this.props.data.user !== nextProps.data.user) {
-      this.setBrandMessage(nextProps)
-    }
-  }
-
   onLogoutClick() {
     this.props.mutate({
       refetchQueries: [{ query }]
@@ -52,12 +40,14 @@ class Header extends Component {
     hashHistory.push('/signup')
   }
 
-  setBrandMessage(props) {
-    const { firstName, lastName } = props.data.user
+  renderBrandMessage() {
+    const { user } = this.props.data
 
-    if (firstName && lastName) {
-      const brandMessage = `Welcome ${firstName} ${lastName}`
-      this.setState({ brandMessage: brandMessage })
+    if (user) {
+      const { firstName, lastName } = user
+      return `Welcome ${firstName} ${lastName}`
+    } else {
+      return 'Pennypinch'
     }
   }
 
@@ -68,12 +58,10 @@ class Header extends Component {
 
     if (user) {
       return (
-        // <li></li>
         <Button color="inherit" onClick={this.onLogoutClick.bind(this)}>Logout</Button>
       )
     } else {
       return (
-        // wrap in li's?
         <div>
           <Button color="inherit" onClick={this.onSignupClick.bind(this)}>Signup</Button>
           <Button color="inherit" onClick={this.onLoginClick.bind(this)}>Login</Button>
@@ -92,7 +80,7 @@ class Header extends Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              {this.state.brandMessage}
+              {this.renderBrandMessage()}
             </Typography>
             {this.renderButtons()}
           </Toolbar>
