@@ -56,8 +56,8 @@ const AccountCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="contained" href="#contained-buttons">Add an Account</Button>
-        <Button size="small" variant="contained" href="#contained-buttons">Edit an Account</Button>
+        <Button size="small" variant="contained" href="/add-account">Add an Account</Button>
+        <Button size="small" variant="contained" href="/edit-account">Edit an Account</Button>
       </CardActions>
     </Card>
   )

@@ -5,7 +5,9 @@ const App = (props) => {
   return (
     <div className="container">
       <Header />
-      {props.children}
+      <div style={{ marginTop: '100px', marginRight: '10px', marginBottom: '0px', marginLeft: '100px' }}>
+        {props.children}
+      </div>
     </div>
   )
 }

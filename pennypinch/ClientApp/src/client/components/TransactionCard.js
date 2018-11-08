@@ -56,8 +56,8 @@ const TransactionCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="contained" href="#contained-buttons">Add a Transaction</Button>
-        <Button size="small" variant="contained" href="#contained-buttons">Edit a Transaction</Button>
+        <Button size="small" variant="contained" href="/add-transaction">Add a Transaction</Button>
+        <Button size="small" variant="contained" href="/edit-transaction">Edit a Transaction</Button>
       </CardActions>
     </Card>
   )

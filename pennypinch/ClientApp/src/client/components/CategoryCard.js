@@ -56,8 +56,8 @@ const CategoryCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="contained" href="#contained-buttons">Add a Category</Button>
-        <Button size="small" variant="contained" href="#contained-buttons">Edit a Category</Button>
+        <Button size="small" variant="contained" href="/add-category">Add a Category</Button>
+        <Button size="small" variant="contained" href="/edit-category">Edit a Category</Button>
       </CardActions>
     </Card>
   )

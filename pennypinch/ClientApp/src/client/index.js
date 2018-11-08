@@ -11,6 +11,17 @@ import LoginForm from './components/LoginForm'
 import SignupForm from './components/SignupForm'
 import Dashboard from './components/Dashboard'
 import DashboardSetup from './components/DashboardSetup'
+import UserProfile from './components/UserProfile'
+import EditPasswordForm from './components/EditPasswordForm'
+import EditEmailForm from './components/EditEmailForm'
+import EditNamesForm from './components/EditNamesForm'
+import EditProfileInfoForm from './components/EditProfileInfoForm'
+import AddAccountForm from './components/AddAccountForm'
+import EditAccountForm from './components/EditAccountForm'
+import AddCategoryForm from './components/AddCategoryForm'
+import EditCategoryForm from './components/EditCategoryForm'
+import AddTransactionForm from './components/AddTransactionForm'
+import EditTransactionForm from './components/EditTransactionForm'
 import requireAuth from './components/requireAuth'
 
 const client = new ApolloClient({
@@ -28,6 +39,17 @@ const Root = () => {
           <Route path="signup" component={SignupForm} />
           <Route path="dashboard-setup" component={requireAuth(DashboardSetup)} />
           <Route path="dashboard" component={requireAuth(Dashboard)} />
+          <Route path="user-profile" component={requireAuth(UserProfile)} />
+          <Route path="edit-password" component={requireAuth(EditPasswordForm)} />
+          <Route path="edit-email" component={requireAuth(EditEmailForm)} />
+          <Route path="edit-names" component={requireAuth(EditNamesForm)} />
+          <Route path="edit-profile-info" component={requireAuth(EditProfileInfoForm)} />
+          <Route path="add-account" component={requireAuth(AddAccountForm)} />
+          <Route path="edit-account" component={requireAuth(EditAccountForm)} />
+          <Route path="add-category" component={requireAuth(AddCategoryForm)} />
+          <Route path="edit-category" component={requireAuth(EditCategoryForm)} />
+          <Route path="add-transaction" component={requireAuth(AddTransactionForm)} />
+          <Route path="edit-transaction" component={requireAuth(EditTransactionForm)} />
         </Route>
       </Router>
     </ApolloProvider>
