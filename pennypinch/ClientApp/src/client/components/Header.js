@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import { graphql } from 'react-apollo'
-import { Link } from 'react-router'
 import query from '../queries/CurrentUser'
 import mutation from '../mutations/Logout'
 import { hashHistory } from 'react-router'
@@ -27,6 +26,18 @@ const styles = {
 }
 
 class Header extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { brandMessage: 'Pennypinch' }
+  }
+
+  componentWillUpdate(nextProps) {
+    if (this.props.data.user && this.props.data.user !== nextProps.data.user) {
+      this.setBrandMessage(nextProps)
+    }
+  }
+
   onLogoutClick() {
     this.props.mutate({
       refetchQueries: [{ query }]
@@ -39,6 +50,15 @@ class Header extends Component {
 
   onSignupClick() {
     hashHistory.push('/signup')
+  }
+
+  setBrandMessage(props) {
+    const { firstName, lastName } = props.data.user
+
+    if (firstName && lastName) {
+      const brandMessage = `Welcome ${firstName} ${lastName}`
+      this.setState({ brandMessage: brandMessage })
+    }
   }
 
   renderButtons() {
@@ -72,7 +92,7 @@ class Header extends Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              Home
+              {this.state.brandMessage}
             </Typography>
             {this.renderButtons()}
           </Toolbar>
