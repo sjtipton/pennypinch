@@ -37,13 +37,8 @@ function signup({ email, password, firstName, lastName, req }) {
         .then(() => {
           return GreenlitRestClient.authenticate({ email, password, req })
             .then(authResponse => {
-              const apiUser = new User({
-                id: authResponse.id,
-                email: email
-              })
-
               const { id, authToken, expiresIn, issuedAt } = authResponse
-
+              const apiUser = new User({ id, email, firstName, lastName })
               const greenlitAuthToken = new AuthToken({ userId: id, apiId: id, authToken, expiresIn, issuedAt })
 
               apiUser.save()

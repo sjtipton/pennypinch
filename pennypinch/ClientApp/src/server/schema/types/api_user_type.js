@@ -18,6 +18,8 @@ const ApiUserType = new GraphQLObjectType({
   fields: {
     id: { type: GraphQLID },
     email: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
     authTokens: {
       type: new GraphQLList(AuthTokenType),
       resolve: (parentValue, args, req) => {

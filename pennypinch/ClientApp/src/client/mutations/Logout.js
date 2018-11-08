@@ -5,6 +5,8 @@ export default gql`
     logout {
       id
       email
+      firstName
+      lastName
     }
   }
 `
