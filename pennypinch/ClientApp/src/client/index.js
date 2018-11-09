@@ -16,10 +16,13 @@ import EditPasswordForm from './components/EditPasswordForm'
 import EditEmailForm from './components/EditEmailForm'
 import EditNamesForm from './components/EditNamesForm'
 import EditProfileInfoForm from './components/EditProfileInfoForm'
+import UserAccounts from './components/UserAccounts'
 import AddAccountForm from './components/AddAccountForm'
 import EditAccountForm from './components/EditAccountForm'
+import UserCategories from './components/UserCategories'
 import AddCategoryForm from './components/AddCategoryForm'
 import EditCategoryForm from './components/EditCategoryForm'
+import UserTransactions from './components/UserTransactions'
 import AddTransactionForm from './components/AddTransactionForm'
 import EditTransactionForm from './components/EditTransactionForm'
 import requireAuth from './components/requireAuth'
@@ -44,10 +47,13 @@ const Root = () => {
           <Route path="edit-email" component={requireAuth(EditEmailForm)} />
           <Route path="edit-names" component={requireAuth(EditNamesForm)} />
           <Route path="edit-profile-info" component={requireAuth(EditProfileInfoForm)} />
+          <Route path="user-accounts" component={requireAuth(UserAccounts)} />
           <Route path="add-account" component={requireAuth(AddAccountForm)} />
           <Route path="edit-account" component={requireAuth(EditAccountForm)} />
+          <Route path="user-categories" component={requireAuth(UserCategories)} />
           <Route path="add-category" component={requireAuth(AddCategoryForm)} />
           <Route path="edit-category" component={requireAuth(EditCategoryForm)} />
+          <Route path="user-transactions" component={requireAuth(UserTransactions)} />
           <Route path="add-transaction" component={requireAuth(AddTransactionForm)} />
           <Route path="edit-transaction" component={requireAuth(EditTransactionForm)} />
         </Route>
