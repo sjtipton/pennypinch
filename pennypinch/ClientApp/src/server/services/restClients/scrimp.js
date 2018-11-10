@@ -56,6 +56,24 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
     })
 }
 
+function updateUserProfile({ timezone, weekstart, currency, scrimpApiId, req }) {
+  return getAuthorizationHeader(scrimpApiId)
+    .then((authHeader) => {
+      const payload = { timezone, weekStartDay: weekstart, currencyCode: currency }
+
+      return update(scrimpApiId, payload, authHeader, req)
+        .then(() => {
+          UserProfile.findOne({ scrimpApiId }, (err, doc) => {
+            doc.timezone = timezone
+            doc.weekstart = weekstart
+            doc.currency = currency
+            doc.visits.$inc()
+            doc.save()
+          })
+        })
+    })
+}
+
 function setup(payload, req) {
   return new Promise((resolve, reject) => {
     axios.post(`${baseURL}/users/setup`, payload)
@@ -64,6 +82,21 @@ function setup(payload, req) {
       }).catch((ex) => {
         reject(ex)
       })
+  })
+}
+
+function update(id, payload, authHeader, req) {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: 'put',
+      url: `${baseURL}/users/${id}`,
+      data: payload,
+      headers: authHeader
+    }).then(response => {
+      resolve(response.data)
+    }).catch((ex) => {
+      reject(ex)
+    })
   })
 }
 
@@ -94,4 +127,4 @@ function getAuthorizationHeader(apiId) {
   })
 }
 
-module.exports = { setupUser, getAuthToken }
+module.exports = { setupUser, updateUserProfile, getAuthToken }

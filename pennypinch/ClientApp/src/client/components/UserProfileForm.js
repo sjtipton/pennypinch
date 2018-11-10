@@ -7,6 +7,8 @@ import SaveIcon from '@material-ui/icons/Save'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import zip2tz from 'zipcode-to-timezone'
+import { graphql } from 'react-apollo'
+import query from '../queries/CurrentUser'
 
 const styles = theme => ({
   container: {
@@ -75,6 +77,18 @@ class UserProfileForm extends Component {
       weekstart: '',
       currency: '',
       zipcode: ''
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { user } = nextProps.data.user
+
+    if (user && user.profile) {
+      const { timezone, weekstart, currency } = nextProps.data.user.profile
+
+      this.setState({ timezone })
+      this.setState({ weekstart })
+      this.setState({ currency })
     }
   }
 
@@ -187,4 +201,6 @@ UserProfileForm.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(UserProfileForm)
+export default withStyles(styles)(
+  graphql(query)(UserProfileForm)
+)

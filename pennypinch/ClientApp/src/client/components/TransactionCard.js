@@ -46,7 +46,7 @@ const TransactionCard = (props) => {
     <Card className={classes.card}>
       <CardContent>
         <Typography variant="h5" component="h2">
-          Add/Edit Transactions
+          Add/Manage Transactions
           <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title={helpText} placement="right">
             <HelpRoundedIcon className={classNames(classes.rightIcon, classes.iconSmall)} />
           </Tooltip>
@@ -56,8 +56,8 @@ const TransactionCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="contained" href="/add-transaction">Add a Transaction</Button>
-        <Button size="small" variant="contained" href="/edit-transaction">Edit a Transaction</Button>
+        <Button size="small" variant="contained" href="#/add-transaction">Add Transaction</Button>
+        <Button size="small" variant="contained" href="#/user-transactions">View Transactions</Button>
       </CardActions>
     </Card>
   )

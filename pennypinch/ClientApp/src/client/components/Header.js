@@ -128,24 +128,24 @@ class Header extends Component {
     hashHistory.push('/add-account')
   }
 
-  onAccountEditClick() {
-    hashHistory.push('/edit-account')
+  onAccountViewClick() {
+    hashHistory.push('/user-accounts')
   }
 
   onCategoryAddClick() {
     hashHistory.push('/add-category')
   }
 
-  onCategoryEditClick() {
-    hashHistory.push('/edit-category')
+  onCategoryViewClick() {
+    hashHistory.push('/user-categories')
   }
 
   onTransactionAddClick() {
     hashHistory.push('/add-transaction')
   }
 
-  onTransactionEditClick() {
-    hashHistory.push('/edit-transaction')
+  onTransactionViewClick() {
+    hashHistory.push('/user-transactions')
   }
 
   onLoginClick() {
@@ -200,46 +200,46 @@ class Header extends Component {
         <Divider />
         <List>
           <ListItem button onClick={this.onAccountAddClick.bind(this)}>
-            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="Add an Account" placement="right" disableHoverListener={this.state.open}>
+            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="Add Account" placement="right" disableHoverListener={this.state.open}>
               <ListItemIcon><AccountBalanceIcon /></ListItemIcon>
             </Tooltip>
-            <ListItemText primary="Add an Account" />
+            <ListItemText primary="Add Account" />
           </ListItem>
-          <ListItem button onClick={this.onAccountEditClick.bind(this)}>
-            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="Edit an Account" placement="right" disableHoverListener={this.state.open}>
+          <ListItem button onClick={this.onAccountViewClick.bind(this)}>
+            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="View Accounts" placement="right" disableHoverListener={this.state.open}>
               <ListItemIcon><AccountBalanceIcon /></ListItemIcon>
             </Tooltip>
-            <ListItemText primary="Edit an Account" />
+            <ListItemText primary="View Accounts" />
           </ListItem>
         </List>
         <Divider />
         <List>
           <ListItem button onClick={this.onCategoryAddClick.bind(this)}>
-            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="Add a Category" placement="right" disableHoverListener={this.state.open}>
+            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="Add Category" placement="right" disableHoverListener={this.state.open}>
               <ListItemIcon><CategoryRoundedIcon /></ListItemIcon>
             </Tooltip>
-            <ListItemText primary="Add a Category" />
+            <ListItemText primary="Add Category" />
           </ListItem>
-          <ListItem button onClick={this.onCategoryEditClick.bind(this)}>
-            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="Edit a Category" placement="right" disableHoverListener={this.state.open}>
+          <ListItem button onClick={this.onCategoryViewClick.bind(this)}>
+            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="View Categories" placement="right" disableHoverListener={this.state.open}>
               <ListItemIcon><CategoryRoundedIcon /></ListItemIcon>
             </Tooltip>
-            <ListItemText primary="Edit a Category" />
+            <ListItemText primary="View Categories" />
           </ListItem>
         </List>
         <Divider />
         <List>
           <ListItem button onClick={this.onTransactionAddClick.bind(this)}>
-            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="Add a Transaction" placement="right" disableHoverListener={this.state.open}>
+            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="Add Transaction" placement="right" disableHoverListener={this.state.open}>
               <ListItemIcon><AttachMoneyIcon /></ListItemIcon>
             </Tooltip>
-            <ListItemText primary="Add a Transaction" />
+            <ListItemText primary="Add Transaction" />
           </ListItem>
-          <ListItem button onClick={this.onTransactionEditClick.bind(this)}>
-            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="Edit a Transaction" placement="right" disableHoverListener={this.state.open}>
+          <ListItem button onClick={this.onTransactionViewClick.bind(this)}>
+            <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title="View Transactions" placement="right" disableHoverListener={this.state.open}>
               <ListItemIcon><AttachMoneyIcon /></ListItemIcon>
             </Tooltip>
-            <ListItemText primary="Edit a Transaction" />
+            <ListItemText primary="View Transactions" />
           </ListItem>
         </List>
       </Drawer>

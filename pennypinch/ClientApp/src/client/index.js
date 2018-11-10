@@ -15,7 +15,6 @@ import UserProfile from './components/UserProfile'
 import EditPasswordForm from './components/EditPasswordForm'
 import EditEmailForm from './components/EditEmailForm'
 import EditNamesForm from './components/EditNamesForm'
-import EditProfileInfoForm from './components/EditProfileInfoForm'
 import UserAccounts from './components/UserAccounts'
 import AddAccountForm from './components/AddAccountForm'
 import EditAccountForm from './components/EditAccountForm'
@@ -46,7 +45,6 @@ const Root = () => {
           <Route path="edit-password" component={requireAuth(EditPasswordForm)} />
           <Route path="edit-email" component={requireAuth(EditEmailForm)} />
           <Route path="edit-names" component={requireAuth(EditNamesForm)} />
-          <Route path="edit-profile-info" component={requireAuth(EditProfileInfoForm)} />
           <Route path="user-accounts" component={requireAuth(UserAccounts)} />
           <Route path="add-account" component={requireAuth(AddAccountForm)} />
           <Route path="edit-account" component={requireAuth(EditAccountForm)} />

@@ -46,7 +46,7 @@ const AccountCard = (props) => {
     <Card className={classes.card}>
       <CardContent>
         <Typography variant="h5" component="h2">
-          Add/Edit Accounts
+          Add/Manage Accounts
           <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title={helpText} placement="right">
             <HelpRoundedIcon className={classNames(classes.rightIcon, classes.iconSmall)} />
           </Tooltip>
@@ -56,8 +56,8 @@ const AccountCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="contained" href="/add-account">Add an Account</Button>
-        <Button size="small" variant="contained" href="/edit-account">Edit an Account</Button>
+        <Button size="small" variant="contained" href="#/add-account">Add Account</Button>
+        <Button size="small" variant="contained" href="#/user-accounts">View All Accounts</Button>
       </CardActions>
     </Card>
   )

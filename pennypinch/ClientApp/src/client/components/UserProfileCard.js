@@ -38,7 +38,7 @@ const UserProfileCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="contained" href="/user-profile">Edit User Profile</Button>
+        <Button size="small" variant="contained" href="#/user-profile">Edit User Profile</Button>
       </CardActions>
     </Card>
   )

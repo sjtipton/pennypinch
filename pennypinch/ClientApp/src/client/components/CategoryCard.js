@@ -46,7 +46,7 @@ const CategoryCard = (props) => {
     <Card className={classes.card}>
       <CardContent>
         <Typography variant="h5" component="h2">
-          Add/Edit Categories
+          Add/Manage Categories
           <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 600 }} title={helpText} placement="right">
             <HelpRoundedIcon className={classNames(classes.rightIcon, classes.iconSmall)} />
           </Tooltip>
@@ -56,8 +56,8 @@ const CategoryCard = (props) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="contained" href="/add-category">Add a Category</Button>
-        <Button size="small" variant="contained" href="/edit-category">Edit a Category</Button>
+        <Button size="small" variant="contained" href="#/add-category">Add Category</Button>
+        <Button size="small" variant="contained" href="#/user-categories">View Categories</Button>
       </CardActions>
     </Card>
   )
