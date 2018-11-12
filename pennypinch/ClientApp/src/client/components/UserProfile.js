@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import UserProfileForm from './UserProfileForm'
+import EditUserProfileForm from './EditUserProfileForm'
 import { hashHistory } from 'react-router'
 import mutation from '../mutations/UpdateUserProfile'
 import { graphql } from 'react-apollo'
@@ -72,7 +72,7 @@ class UserProfile extends Component {
         </Grid>
         <Grid container spacing={24}>
           <Grid item xs>
-            <UserProfileForm errors={this.state.errors} onSubmit={this.onSubmit.bind(this)} />
+            <EditUserProfileForm errors={this.state.errors} onSubmit={this.onSubmit.bind(this)} />
           </Grid>
         </Grid>
       </div>
