@@ -72,25 +72,22 @@ class EditUserProfileForm extends Component {
   constructor(props) {
     super(props)
 
-    console.log('incoming props...', props)
-
-    this.state = {
-      timezone: '',
-      weekstart: '',
-      currency: '',
-      zipcode: ''
-    }
+    this.state = { zipcode: '' }
   }
 
   componentWillUpdate(nextProps) {
-    const { user } = nextProps.data.user
+    if (nextProps !== this.props) {
+      const { loading, user } = nextProps.data
 
-    if (user && user.profile) {
-      const { timezone, weekstart, currency } = nextProps.data.user.profile
+      if (user && user.profile) {
+        const { timezone, weekstart, currency } = user.profile
 
-      this.initTimezone(timezone)
-      this.initWeekstart(weekstart)
-      this.initCurrency(currency)
+        this.setState({ user }, () => console.log('initialized user into state', this.state.user))
+        this.setState({ loading }, () => console.log('initialized loading state', this.state.loading))
+        this.setState({ timezone }, () => console.log('initialized timezone', this.state.timezone))
+        this.setState({ weekstart }, () => console.log('initialized weekstart', this.state.weekstart))
+        this.setState({ currency }, () => console.log('initialized currency', this.state.currency))
+      }
     }
   }
 
@@ -105,109 +102,102 @@ class EditUserProfileForm extends Component {
     this.setState({ timezone: tz })
   }
 
-  initTimezone(timezone) {
-    this.setState({ timezone }, () => console.log('initialized timezone', this.state.timezone))
-  }
-
-  initWeekstart(weekstart) {
-    this.setState({ weekstart }, () => console.log('initialized weekstart', this.state.weekstart))
-  }
-
-  initCurrency(currency) {
-    this.setState({ currency }, () => console.log('initialized currency', this.state.currency))
-  }
-
   handleSave(event) {
     this.props.onSubmit(this.state)
   }
 
   render() {
     const { classes } = this.props
+    const { user } = this.state
 
-    return (
-      <form className={classes.container} noValidate autoComplete="off">
-        <TextField
-            id="zipcode-lookup"
-            label="Zip Code"
-            placeholder="Zip Code"
-            className={classes.textField}
-            value={this.state.zipcode}
-            onChange={e => this.setState({ zipcode: e.target.value })}
-            helperText="Enter your local US Zip Code"
-            margin="normal"
-            fullWidth
-            variant="outlined"
-        />
+    if (user) {
+      return (
+        <form className={classes.container} noValidate autoComplete="off">
+          <TextField
+              id="zipcode-lookup"
+              label="Zip Code"
+              placeholder="Zip Code"
+              className={classes.textField}
+              value={this.state.zipcode}
+              onChange={e => this.setState({ zipcode: e.target.value })}
+              helperText="Enter your local US Zip Code"
+              margin="normal"
+              fullWidth
+              variant="outlined"
+          />
 
-        <TextField
-            disabled
-            id="timezone"
-            label="Timezone"
-            placeholder="Timezone"
-            className={classes.textField}
-            value={this.state.timezone}
-            helperText="Will be based on your location"
-            margin="normal"
-            fullWidth
-            variant="outlined"
-        />
+          <TextField
+              disabled
+              id="timezone"
+              label="Timezone"
+              placeholder="Timezone"
+              className={classes.textField}
+              value={this.state.timezone}
+              helperText="Will be based on your location"
+              margin="normal"
+              fullWidth
+              variant="outlined"
+          />
 
-        <TextField
-            id="select-weekstart"
-            select
-            label="Starting Day of Week"
-            placeholder="Starting Day of Week"
-            className={classes.textField}
-            value={this.state.weekstart}
-            onChange={e => this.setState({ weekstart: e.target.value })}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
-            helperText="Choose your preferred starting day of the week"
-            margin="normal"
-            fullWidth
-            variant="outlined"
-        >
-          {days.map((day, index) => <MenuItem key={index} value={day}>{day}</MenuItem>)}
-        </TextField>
+          <TextField
+              id="select-weekstart"
+              select
+              label="Starting Day of Week"
+              placeholder="Starting Day of Week"
+              className={classes.textField}
+              value={this.state.weekstart}
+              onChange={e => this.setState({ weekstart: e.target.value })}
+              SelectProps={{
+                MenuProps: {
+                  className: classes.menu
+                }
+              }}
+              helperText="Choose your preferred starting day of the week"
+              margin="normal"
+              fullWidth
+              variant="outlined"
+          >
+            {days.map((day, index) => <MenuItem key={index} value={day}>{day}</MenuItem>)}
+          </TextField>
 
-        <TextField
-            id="select-currency"
-            select
-            label="Currency Preference"
-            placeholder="Currency Preference"
-            className={classes.textField}
-            value={this.state.currency}
-            onChange={e => this.setState({ currency: e.target.value })}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu
-              }
-            }}
-            helperText="Select your currency preference"
-            margin="normal"
-            fullWidth
-            variant="outlined"
-        >
-          {currencies.map(option => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
+          <TextField
+              id="select-currency"
+              select
+              label="Currency Preference"
+              placeholder="Currency Preference"
+              className={classes.textField}
+              value={this.state.currency}
+              onChange={e => this.setState({ currency: e.target.value })}
+              SelectProps={{
+                MenuProps: {
+                  className: classes.menu
+                }
+              }}
+              helperText="Select your currency preference"
+              margin="normal"
+              fullWidth
+              variant="outlined"
+          >
+            {currencies.map(option => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
 
-        <div className="errors">
-          {this.props.errors.map(error => <div key={error}>{error}</div>)}
-        </div>
+          <div className="errors">
+            {this.props.errors.map(error => <div key={error}>{error}</div>)}
+          </div>
 
-        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSave.bind(this)}>
-          <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
-          Save
+          <Button variant="contained" color="primary" className={classes.button} onClick={this.handleSave.bind(this)}>
+            <SaveIcon className={classNames(classes.leftIcon, classes.iconSmall)} />
+            Save
         </Button>
-      </form>
-    )
+        </form>
+      )
+    } else {
+      return <div className={classes.container}>Loading...</div>
+    }
   }
 }
 

@@ -56,7 +56,9 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
     })
 }
 
-function updateUserProfile({ timezone, weekstart, currency, scrimpApiId, req }) {
+function updateUserProfile({ timezone, weekstart, currency, req }) {
+  const { scrimpApiId } = req.user.profile
+
   return getAuthorizationHeader(scrimpApiId)
     .then((authHeader) => {
       const payload = { timezone, weekStartDay: weekstart, currencyCode: currency }

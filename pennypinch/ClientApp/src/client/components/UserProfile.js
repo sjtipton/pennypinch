@@ -40,11 +40,8 @@ class UserProfile extends Component {
   }
 
   onSubmit({ timezone, weekstart, currency }) {
-    const { profile } = this.props.data.user
-    const scrimpApiId = profile.scrimpApiId
-
     this.props.mutate({
-      variables: { timezone, weekstart, currency, scrimpApiId },
+      variables: { timezone, weekstart, currency },
       refetchQueries: [{ query }]
     }).catch(res => {
       const errors = res.graphQLErrors.map(error => error.message)

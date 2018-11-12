@@ -7,6 +7,20 @@ export default gql`
       email
       firstName
       lastName
+      authTokens {
+        userId
+        apiId
+        authToken
+        expiresIn
+        issuedAt
+      }
+      profile {
+        timezone
+        weekstart
+        currency
+        greenlitApiId
+        scrimpApiId
+      }
     }
   }
 `

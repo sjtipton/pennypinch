@@ -47,11 +47,11 @@ const mutation = new GraphQLObjectType({
       args: {
         timezone: { type: GraphQLString },
         weekstart: { type: WeekStartType },
-        currency: { type: GraphQLString },
-        scrimpApiId: { type: GraphQLID }
+        currency: { type: GraphQLString }
       },
-      resolve: (parentValue, { timezone, weekstart, currency, scrimpApiId }, req) => {
-        return ScrimpRestClient.updateUserProfile({ timezone, weekstart, currency, scrimpApiId, req })
+      resolve: (parentValue, { timezone, weekstart, currency }, req) => {
+        console.log('user from req', req.user)
+        return ScrimpRestClient.updateUserProfile({ timezone, weekstart, currency, req })
       }
     },
     logout: {
