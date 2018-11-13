@@ -76,17 +76,12 @@ class EditUserProfileForm extends Component {
   }
 
   componentWillUpdate(nextProps) {
-    if (nextProps !== this.props) {
+    if (nextProps.data !== this.props.data) {
       const { loading, user } = nextProps.data
 
       if (user && user.profile) {
-        const { timezone, weekstart, currency } = user.profile
-
-        this.setState({ user }, () => console.log('initialized user into state', this.state.user))
-        this.setState({ loading }, () => console.log('initialized loading state', this.state.loading))
-        this.setState({ timezone }, () => console.log('initialized timezone', this.state.timezone))
-        this.setState({ weekstart }, () => console.log('initialized weekstart', this.state.weekstart))
-        this.setState({ currency }, () => console.log('initialized currency', this.state.currency))
+        const { timezone, weekstart, currency, scrimpApiId } = user.profile
+        this.setPrevPropsToState({ loading, user, timezone, weekstart, currency, scrimpApiId })
       }
     }
   }
@@ -95,6 +90,15 @@ class EditUserProfileForm extends Component {
     if (this.state.zipcode.length === 5 && this.state.zipcode !== prevState.zipcode) {
       this.setTimezone(this.state.zipcode)
     }
+  }
+
+  setPrevPropsToState({ loading, user, timezone, weekstart, currency, scrimpApiId }) {
+    this.setState({ user })
+    this.setState({ loading })
+    this.setState({ timezone })
+    this.setState({ weekstart })
+    this.setState({ currency })
+    this.setState({ scrimpApiId })
   }
 
   setTimezone(zipcode) {

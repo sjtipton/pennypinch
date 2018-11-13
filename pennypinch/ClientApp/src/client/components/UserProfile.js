@@ -39,9 +39,9 @@ class UserProfile extends Component {
     hashHistory.push('/edit-password')
   }
 
-  onSubmit({ timezone, weekstart, currency }) {
+  onSubmit({ timezone, weekstart, currency, scrimpApiId }) {
     this.props.mutate({
-      variables: { timezone, weekstart, currency },
+      variables: { timezone, weekstart, currency, scrimpApiId },
       refetchQueries: [{ query }]
     }).catch(res => {
       const errors = res.graphQLErrors.map(error => error.message)
