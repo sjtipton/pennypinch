@@ -67,7 +67,6 @@ function updateUserProfile({ timezone, weekstart, currency, scrimpApiId, req }) 
             doc.timezone = timezone
             doc.weekstart = weekstart
             doc.currency = currency
-            doc.visits.$inc()
             doc.save()
           })
         })
