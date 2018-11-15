@@ -87,10 +87,26 @@ function setup(payload, req) {
 function update(id, payload, authHeader, req) {
   return new Promise((resolve, reject) => {
     axios({
-      method: 'put',
+      method: 'patch',
       url: `${baseURL}/users/${id}`,
+      transformRequest: [function (data, headers) {
+        let payload = []
+
+        Object.entries(data).forEach(([key, val]) => {
+          payload.push({
+            op: "replace",
+            path: `/${key}`,
+            value: val
+          })
+        })
+
+        return JSON.stringify(payload)
+      }],
       data: payload,
-      headers: authHeader
+      headers: {
+        Authorization: authHeader,
+        'Content-Type': 'application/json'
+      }
     }).then(response => {
       resolve(response.data)
     }).catch((ex) => {
@@ -118,7 +134,7 @@ function getAuthorizationHeader(apiId) {
   return new Promise((resolve, reject) => {
     return getAuthToken(apiId)
       .then((authToken) => {
-        const header = { 'Authorization': `Bearer ${authToken}` }
+        const header = `Bearer ${authToken}`
         resolve(header)
       }).catch(ex => {
         reject(ex)
