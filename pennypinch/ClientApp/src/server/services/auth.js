@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const passport = require('passport')
-const { GreenlitUserSchema } = require('../models/greenlitApiUser')
-const GreenlitApiUser = mongoose.model('greenlitApiUser', GreenlitUserSchema)
+const { UserSchema } = require('../models/user')
+const User = mongoose.model('user', UserSchema)
 const { AuthTokenSchema } = require('../models/authToken')
 const AuthToken = mongoose.model('authToken', AuthTokenSchema)
 const GreenlitRestClient = require('./restClients/greenlit')
@@ -17,7 +17,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
   // We can't utilize the `findById` method since the Greenlit API returns a GUID type, which is
   // out of range of the allowed limitations of the ObjectId conversion
-  GreenlitApiUser.findOne({ id }, (err, user) => {
+  User.findOne({ id }, (err, user) => {
     done(err, user)
   })
 })
@@ -30,21 +30,16 @@ function signup({ email, password, firstName, lastName, req }) {
       // TODO handle errors as collection
       if (!email || !password) { throw new Error('You must provide an email and password.') }
 
-      return GreenlitApiUser.findOne({ email })
+      return User.findOne({ email })
         .then(existingUser => {
           if (existingUser) { throw new Error('Email in use') }
         })
         .then(() => {
           return GreenlitRestClient.authenticate({ email, password, req })
             .then(authResponse => {
-              const apiUser = new GreenlitApiUser({
-                id: authResponse.id,
-                email: email
-              })
-
               const { id, authToken, expiresIn, issuedAt } = authResponse
-
-              const greenlitAuthToken = new AuthToken({ apiId: id, authToken, expiresIn, issuedAt })
+              const apiUser = new User({ id, email, firstName, lastName })
+              const greenlitAuthToken = new AuthToken({ userId: id, apiId: id, authToken, expiresIn, issuedAt })
 
               apiUser.save()
               greenlitAuthToken.save()

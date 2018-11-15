@@ -18,19 +18,22 @@ const ApiUserType = new GraphQLObjectType({
   fields: {
     id: { type: GraphQLID },
     email: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
     authTokens: {
       type: new GraphQLList(AuthTokenType),
       resolve: (parentValue, args, req) => {
-        // retrieve all AuthTokens (e.g. Greenlit and Scrimp)
-        return AuthToken.find({})
+        // retrieve all AuthTokens (e.g. Greenlit and Scrimp) for the current user
+        const { id } = parentValue
+        return AuthToken.find({ userId: id })
       }
     },
     profile: {
       type: UserProfileType,
       resolve: (parentValue, args, req) => {
         // locate the UserProfile by the userid
-        const userid = parentValue.id
-        return UserProfile.findOne({ userid })
+        const { id } = parentValue
+        return UserProfile.findOne({ greenlitApiId: id })
       }
     }
   }

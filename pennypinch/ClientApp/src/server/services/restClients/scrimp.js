@@ -27,8 +27,8 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
 
       return setup(payload, req)
         .then((response) => {
-          const userid = payload.greenlitApiId
-          return UserProfile.findOne({ userid })
+          const userid = req.user.id
+          return UserProfile.findOne({ greenlitApiId: userid })
             .then(existingProfile => {
               if (existingProfile) { throw new Error('User profile has already been setup') }
             })
@@ -37,13 +37,13 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
                 timezone: payload.timezone,
                 weekstart: payload.weekStartDay,
                 currency: payload.currencyCode,
-                userid: payload.greenlitApiId,
+                greenlitApiId: userid,
                 scrimpApiId: response.user.id
               })
 
               const { id, authToken, expiresIn, issuedAt } = response.jwt
 
-              const scrimpAuthToken = new AuthToken({ apiId: id, authToken, expiresIn, issuedAt })
+              const scrimpAuthToken = new AuthToken({ userId: userid, apiId: id, authToken, expiresIn, issuedAt })
 
               userProfile.save()
               scrimpAuthToken.save()
@@ -56,6 +56,23 @@ function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
     })
 }
 
+function updateUserProfile({ timezone, weekstart, currency, scrimpApiId, req }) {
+  return getAuthorizationHeader(scrimpApiId)
+    .then((authHeader) => {
+      const payload = { timezone, weekStartDay: weekstart, currencyCode: currency }
+
+      return update(scrimpApiId, payload, authHeader, req)
+        .then(() => {
+          UserProfile.findOne({ scrimpApiId }, (err, doc) => {
+            doc.timezone = timezone
+            doc.weekstart = weekstart
+            doc.currency = currency
+            doc.save()
+          })
+        })
+    })
+}
+
 function setup(payload, req) {
   return new Promise((resolve, reject) => {
     axios.post(`${baseURL}/users/setup`, payload)
@@ -64,6 +81,37 @@ function setup(payload, req) {
       }).catch((ex) => {
         reject(ex)
       })
+  })
+}
+
+function update(id, payload, authHeader, req) {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: 'patch',
+      url: `${baseURL}/users/${id}`,
+      transformRequest: [function (data, headers) {
+        let payload = []
+
+        Object.entries(data).forEach(([key, val]) => {
+          payload.push({
+            op: "replace",
+            path: `/${key}`,
+            value: val
+          })
+        })
+
+        return JSON.stringify(payload)
+      }],
+      data: payload,
+      headers: {
+        Authorization: authHeader,
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      resolve(response.data)
+    }).catch((ex) => {
+      reject(ex)
+    })
   })
 }
 
@@ -86,7 +134,7 @@ function getAuthorizationHeader(apiId) {
   return new Promise((resolve, reject) => {
     return getAuthToken(apiId)
       .then((authToken) => {
-        const header = { 'Authorization': `Bearer ${authToken}` }
+        const header = `Bearer ${authToken}`
         resolve(header)
       }).catch(ex => {
         reject(ex)
@@ -94,4 +142,4 @@ function getAuthorizationHeader(apiId) {
   })
 }
 
-module.exports = { setupUser, getAuthToken }
+module.exports = { setupUser, updateUserProfile, getAuthToken }

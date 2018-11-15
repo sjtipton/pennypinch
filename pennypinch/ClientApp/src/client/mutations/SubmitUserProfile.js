@@ -6,7 +6,7 @@ export default gql`
       timezone
       weekstart
       currency
-      userid
+      greenlitApiId
       scrimpApiId
     }
   }

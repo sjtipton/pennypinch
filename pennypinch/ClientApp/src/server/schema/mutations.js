@@ -1,7 +1,9 @@
 const graphql = require('graphql')
 const {
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
+  GraphQLID,
+  GraphQLNonNull
 } = graphql
 const WeekStartType = require('./types/week_start_type')
 
@@ -39,6 +41,18 @@ const mutation = new GraphQLObjectType({
           .then((greenlitUser) => {
             return ScrimpRestClient.setupUser({ greenlitUser, timezone, weekstart, currency, req })
           })
+      }
+    },
+    updateUserProfile: {
+      type: UserProfileType,
+      args: {
+        timezone: { type: GraphQLString },
+        weekstart: { type: WeekStartType },
+        currency: { type: GraphQLString },
+        scrimpApiId: { type: new GraphQLNonNull(GraphQLID) }
+      },
+      resolve: (parentValue, { timezone, weekstart, currency, scrimpApiId }, req) => {
+        return ScrimpRestClient.updateUserProfile({ timezone, weekstart, currency, scrimpApiId, req })
       }
     },
     logout: {
