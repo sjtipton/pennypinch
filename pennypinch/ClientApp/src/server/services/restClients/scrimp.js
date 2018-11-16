@@ -9,6 +9,17 @@ const GreenlitRestClient = require('./greenlit')
 // TODO get url from config
 const baseURL = 'http://localhost:4000/api'
 
+function authenticate({ apiId, authToken }) {
+  return new Promise((resolve, reject) => {
+    axios.post(`${baseURL}/users/authenticate`, { apiId, authToken })
+      .then(response => {
+        resolve(response.data)
+      }).catch((ex) => {
+        reject(ex)
+      })
+  })
+}
+
 function setupUser({ greenlitUser, timezone, weekstart, currency, req }) {
   const greenlitAuthTokenId = req.user.id
 
@@ -142,4 +153,4 @@ function getAuthorizationHeader(apiId) {
   })
 }
 
-module.exports = { setupUser, updateUserProfile, getAuthToken }
+module.exports = { authenticate, setupUser, updateUserProfile, getAuthToken }

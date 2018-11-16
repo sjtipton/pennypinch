@@ -2,9 +2,12 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const { UserSchema } = require('../models/user')
 const User = mongoose.model('user', UserSchema)
+const { UserProfileSchema } = require('../models/userProfile')
+const UserProfile = mongoose.model('userProfile', UserProfileSchema)
 const { AuthTokenSchema } = require('../models/authToken')
 const AuthToken = mongoose.model('authToken', AuthTokenSchema)
 const GreenlitRestClient = require('./restClients/greenlit')
+const ScrimpRestClient = require('./restClients/scrimp')
 
 // SerializeUser is used to provide some identifying token that can be saved
 // in the users session.  We traditionally use the 'ID' for this.
@@ -23,7 +26,7 @@ passport.deserializeUser((id, done) => {
 })
 
 // Calls the Greenlit API to create a User account. A successful created account from Greenlit
-//  will create an ApiUser in GraphQL/MongoDB locally
+//  will create a User in GraphQL/MongoDB locally, and then create the AuthToken for the Greenlit API
 function signup({ email, password, firstName, lastName, req }) {
   return GreenlitRestClient.register({ email, password, firstName, lastName, req })
     .then(() => {
@@ -70,18 +73,39 @@ function login({ email, password, req }) {
         .then((userToken) => {
           if (!userToken) { throw new Error('User is unauthorized. Please sign up.') }
 
-          // update the api user's auth token with the fresh authenticated auth token
+          // update the Greenlit user's auth token with the fresh authenticated auth token
           userToken.authToken = greenlitUser.authToken
           userToken.expiresIn = greenlitUser.expiresIn
           userToken.issuedAt = greenlitUser.issuedAt
           userToken.save()
 
-          return new Promise((resolve, reject) => {
-            req.login(authenticatedUser, (err) => {
-              if (err) { reject(err) }
-              resolve(authenticatedUser)
+          return UserProfile.findOne({ greenlitApiId: id })
+            .then((userProfile) => {
+              const apiId = userProfile.greenlitApiId
+              const authToken = userToken.authToken
+
+              return ScrimpRestClient.authenticate({ apiId, authToken })
+                .then(scrimpUser => {
+                  const scrimpApiId = scrimpUser.id
+
+                  // if there is no user token, don't worry, as the user will be directed to the dashboard-setup
+                  return AuthToken.findOne({ apiId: scrimpApiId })
+                    .then((userToken) => {
+                      // update the Scrimp user's auth token with the fresh authenticated auth token
+                      userToken.authToken = scrimpUser.authToken
+                      userToken.expiresIn = scrimpUser.expiresIn
+                      userToken.issuedAt = scrimpUser.issuedAt
+                      userToken.save()
+
+                      return new Promise((resolve, reject) => {
+                        req.login(authenticatedUser, (err) => {
+                          if (err) { reject(err) }
+                          resolve(authenticatedUser)
+                        })
+                      })
+                    })
+                })
             })
-          })
         })
     })
 }
