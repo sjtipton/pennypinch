@@ -47,6 +47,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon src/index.js --ignore client",
+    "prod": "cross-env NODE_ENV=production node src/index.js --ignore client",
+    "start:prod": "npm run prod",
     "start": "npm run dev"
   },
   "devDependencies": {
