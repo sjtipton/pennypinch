@@ -12,17 +12,34 @@ const cors = require('cors')
 // Create a new Express application
 const app = express()
 
-const MONGO_URI = `mongodb://localhost:27017`
+const MONGO_URI = `mongodb://mongo:27017/pennypinch-mongodb`
+
+const MONGO_OPTIONS = {
+  autoIndex: false, // Don't build indexes
+  reconnectTries: 30, // Retry up to 30 times
+  reconnectInterval: 500, // Reconnect every 500ms
+  poolSize: 10, // Maintain up to 10 socket connections
+  // If not connected, return errors immediately rather than waiting for reconnect
+  bufferMaxEntries: 0,
+  useNewUrlParser: true // current URL string parser is deprecated, and will be removed in a future version
+}
 
 // Mongoose's built in promise library is deprecated, replace it with ES2015 Promise
 mongoose.Promise = global.Promise
 
-// Connect to the mongoDB instance and log a message
-// on success or failure
-mongoose.connect(MONGO_URI, { useNewUrlParser: true })
-mongoose.connection
-  .once('open', () => console.log('Connected to MongoDB instance.'))
-  .on('error', error => console.log('Error connecting to MongoDB:', error))
+// Retry connection
+const connectWithRetry = () => {
+  console.log('MongoDB connection with retry')
+  return mongoose.connect(MONGO_URI, MONGO_OPTIONS)
+    .then(() => {
+      console.log('MongoDB is connected')
+    }).catch(err => {
+      console.log(`MongoDB connection unsuccessful, retry after ${MONGO_OPTIONS.reconnectInterval / 100} seconds.`)
+      setTimeout(connectWithRetry, MONGO_OPTIONS * 10)
+    })
+}
+
+connectWithRetry()
 
 // Configures express to use sessions.  This places an encrypted identifier
 // on the users cookie.  When a user makes a request, this middleware examines

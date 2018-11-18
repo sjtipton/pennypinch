@@ -3,7 +3,9 @@ const mongoose = require('mongoose')
 const { AuthTokenSchema } = require('../../models/authToken')
 const AuthToken = mongoose.model('authToken', AuthTokenSchema)
 
-const baseURL = 'http://localhost:8000'
+const isProd = process.env.NODE_ENV === 'production'
+
+const baseURL = isProd ? 'http://greenlit.api' : 'http://localhost:8000'
 
 function register({ email, password, firstName, lastName }) {
   return new Promise((resolve, reject) => {
