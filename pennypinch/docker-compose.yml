@@ -1,0 +1,63 @@
+version: "3"
+
+services:
+  pennypinch:
+    image: slaatipton/pennypinch:1.0.0
+    build: .
+    ports:
+      - '3000:8080'
+    depends_on:
+      - greenlit.api
+      - scrimp.api
+      - mongo
+
+  greenlit.api:
+    image: slaatipton/greenlit:1.0.5
+    expose:
+      - '80'
+    ports:
+      - '8000:80'
+    depends_on:
+      - greenlitsql
+
+  scrimp.api:
+    image: slaatipton/scrimp:1.0.4
+    expose:
+      - '80'
+    ports:
+      - '4000:80'
+    depends_on:
+      - scrimpsql
+
+  greenlitsql:
+    image: "microsoft/mssql-server-linux"
+    volumes:
+      - greenlitdata:/var/opt/mssql
+    environment:
+      SA_PASSWORD: "3oD48DAD"
+      ACCEPT_EULA: "Y"
+
+  scrimpsql:
+    image: "microsoft/mssql-server-linux"
+    volumes:
+      - scrimpdata:/var/opt/mssql
+    environment:
+      SA_PASSWORD: "3sU12BE1"
+      ACCEPT_EULA: "Y"
+
+  mongo:
+    image: mongo:3.2-jessie
+    container_name: "pennypinch-mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - pennypinchdata:/data/db
+    ports:
+      - '27017:27017'
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+
+volumes:
+  pennypinchdata:
+  greenlitdata:
+  scrimpdata:
