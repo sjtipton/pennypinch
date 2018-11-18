@@ -9,7 +9,7 @@ const GreenlitRestClient = require('./greenlit')
 const isProd = process.env.NODE_ENV === 'production'
 
 // TODO get url from config
-const baseURL = isProd ? 'http://scrimp.api/api' : 'http://localhost:4000/api'
+const baseURL = isProd ? 'http://scrimpapi/api' : 'http://localhost:4000/api'
 
 function authenticate({ apiId, authToken }) {
   return new Promise((resolve, reject) => {

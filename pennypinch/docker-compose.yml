@@ -7,11 +7,11 @@ services:
     ports:
       - '3000:8080'
     depends_on:
-      - greenlit.api
-      - scrimp.api
+      - greenlitapi
+      - scrimpapi
       - mongo
 
-  greenlit.api:
+  greenlitapi:
     image: slaatipton/greenlit:1.0.5
     expose:
       - '80'
@@ -20,7 +20,7 @@ services:
     depends_on:
       - greenlitsql
 
-  scrimp.api:
+  scrimpapi:
     image: slaatipton/scrimp:1.0.4
     expose:
       - '80'
